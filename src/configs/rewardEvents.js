@@ -1,3 +1,6 @@
+// Configuration for different reward events that can trigger rewards in the gamification system, 
+// including their fields and allowed rewards
+
 export const rewardEvents = [
   {
     id: 'sales',

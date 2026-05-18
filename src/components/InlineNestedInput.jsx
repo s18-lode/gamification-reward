@@ -16,7 +16,7 @@ export function InlineCurrencyInput({ value, onChange, placeholder = 'e.g. 100' 
     </div>
   )
 }
-
+// the little select input that shows up inside the dropdown when an option has inline fields
 export function InlineNumberInput({ value, onChange, placeholder, prefix = '' }) {
   return (
     <div className="mx-2 mb-1 flex min-w-[100px] flex-1 items-center gap-1 rounded-lg border-2 border-saral-purple bg-white px-3 py-2.5">

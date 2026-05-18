@@ -12,6 +12,7 @@ import {
 } from '../utils/selectionValidation'
 import NestedStagedDropdown from './NestedStagedDropdown'
 
+// Modal for creating a new reward campaign with staged selection for event and reward type, and optional time-bound settings
 const buildFieldDefaults = (fields = []) =>
   fields.reduce((acc, field) => ({ ...acc, [field.name]: '' }), {})
 
@@ -32,22 +33,23 @@ function ToggleSwitch({ checked, onChange }) {
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
-        checked ? 'bg-saral-purple' : 'bg-[#e4e0e6]'
-      }`}
+      className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${checked ? 'bg-saral-purple' : 'bg-[#e4e0e6]'
+        }`}
     >
       <span
-        className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
-          checked ? 'translate-x-5' : 'translate-x-0'
-        }`}
+        className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-5' : 'translate-x-0'
+          }`}
       />
     </button>
   )
 }
 
+//
+
 export default function CreateCampaignModal({ isOpen, onClose }) {
   const dispatch = useDispatch()
   const [form, setForm] = useState(initialForm)
+  const [submitStatus, setSubmitStatus] = useState('idle')
 
   const eventSelection = useStagedSelection()
   const typeSelection = useStagedSelection()
@@ -82,6 +84,7 @@ export default function CreateCampaignModal({ isOpen, onClose }) {
 
   const reset = () => {
     setForm(initialForm())
+    setSubmitStatus('idle')
     eventSelection.setConfirmed(null)
     typeSelection.setConfirmed(null)
     setStagedEventFields({})
@@ -186,7 +189,7 @@ export default function CreateCampaignModal({ isOpen, onClose }) {
         ],
       })
     )
-    handleClose()
+    setSubmitStatus('success')
   }
 
   const minEndDate = getMinFutureDate()
@@ -209,137 +212,158 @@ export default function CreateCampaignModal({ isOpen, onClose }) {
       />
 
       <div
-        className="relative z-10 flex h-[min(580px,88vh)] w-full max-w-[480px] flex-col overflow-visible rounded-2xl bg-white shadow-[0_20px_50px_rgba(45,10,49,0.15)]"
+        className="relative z-10 w-full max-w-[480px] min-h-[344px] flex flex-col overflow-visible rounded-2xl bg-white shadow-[0_20px_50px_rgba(45,10,49,0.15)]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
       >
-        <div className="shrink-0 px-6 pb-0 pt-6 sm:px-8 sm:pt-8">
-          <div className="mb-6 flex items-start justify-between gap-4">
-            <h2
-              id="modal-title"
-              className="text-lg font-semibold leading-snug text-saral-heading sm:text-xl"
-            >
-              Create your reward system
-            </h2>
-            <button
-              type="button"
-              onClick={handleClose}
-              className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-lg text-saral-nav transition hover:bg-[#fdf2f8]"
-              aria-label="Close"
-            >
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <div
-          className={`min-h-0 flex-1 px-6 sm:px-8 ${
-            dropdownOpen
-              ? 'relative z-20 overflow-hidden'
-              : 'overflow-y-auto overflow-x-hidden'
-          }`}
-        >
-          <div className="space-y-5 pb-4">
-            <NestedStagedDropdown
-              variant="modal"
-              label="Reward event"
-              placeholder="Select an event"
-              required
-              options={rewardEvents}
-              selectedOption={confirmedEvent}
-              confirmedFieldValues={form.eventFieldValues}
-              stagedOption={eventSelection.staged}
-              stagedFieldValues={stagedEventFields}
-              getLiveLabel={formatEventLiveLabel}
-              validateSave={canSaveEventSelection}
-              onSelectOption={handleEventSelect}
-              onFieldChange={handleEventFieldChange}
-              isOpen={eventSelection.isOpen}
-              onOpen={handleEventOpen}
-              onCancel={eventSelection.cancel}
-              onSave={handleEventSave}
-            />
-
-            <NestedStagedDropdown
-              variant="modal"
-              label="Reward with"
-              placeholder="Select a reward"
-              required
-              disabled={!form.eventId}
-              options={typeOptions}
-              selectedOption={confirmedType}
-              confirmedFieldValues={form.typeFieldValues}
-              stagedOption={typeSelection.staged}
-              stagedFieldValues={stagedTypeFields}
-              getLiveLabel={formatTypeLiveLabel}
-              validateSave={canSaveTypeSelection}
-              onSelectOption={handleTypeSelect}
-              onFieldChange={handleTypeFieldChange}
-              isOpen={typeSelection.isOpen}
-              onOpen={handleTypeOpen}
-              onCancel={typeSelection.cancel}
-              onSave={handleTypeSave}
-            />
-
-            <div className="pt-1">
-              <div className="flex items-start justify-between gap-4">
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-saral-heading">Make the reward time bound</p>
-                  <p className="mt-1 text-sm leading-relaxed text-[#8a8490]">
-                    Choose an end date to stop this reward automatically.
-                  </p>
-                </div>
-                <ToggleSwitch
-                  checked={form.timeBound.enabled}
-                  onChange={(enabled) =>
-                    setForm({ ...form, timeBound: { ...form.timeBound, enabled } })
-                  }
-                />
-              </div>
-
-              {form.timeBound.enabled && (
-                <div className="mt-4">
-                  <label className="mb-2 block text-sm text-saral-nav">End date</label>
-                  <input
-                    type="date"
-                    value={form.timeBound.endDate}
-                    min={minEndDate}
-                    onChange={(e) => {
-                      const value = e.target.value
-                      if (value && value < minEndDate) return
-                      setForm({
-                        ...form,
-                        timeBound: { ...form.timeBound, endDate: value },
-                      })
-                    }}
-                    className="w-full rounded-lg border border-[#e8e4ea] px-4 py-3 text-sm text-saral-heading outline-none focus:border-saral-purple focus:ring-2 focus:ring-saral-icon-bg"
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="relative z-10 shrink-0 rounded-b-2xl border-t border-[#f3eef2] bg-white px-6 py-5 sm:px-8">
-          <div className="flex gap-3">
+        <div className="flex flex-col h-full px-6 sm:px-8">
+          <div className="shrink-0 pb-0 pt-6">
+            <div className="mb-6 flex items-start justify-between gap-4">
+              <h2
+                id="modal-title"
+                className="text-lg font-semibold leading-snug text-saral-heading sm:text-xl"
+              >
+                Create your reward system
+              </h2>
               <button
                 type="button"
                 onClick={handleClose}
-                className="flex-1 rounded-lg border border-[#e8e4ea] bg-white py-3 text-sm font-medium text-saral-heading hover:bg-[#faf8fa]"
+                className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-lg text-saral-nav transition hover:bg-[#fdf2f8]"
+                aria-label="Close"
               >
-                Cancel
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
-              <button
-                type="button"
-                onClick={handleCreate}
-                disabled={!canCreate}
-                className="flex-1 rounded-lg bg-saral-purple py-3 text-sm font-semibold text-white transition hover:bg-saral-purple-hover disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                Create Reward
-              </button>
+            </div>
+          </div>
+
+          <div className="min-h-0 flex-1 overflow-visible">
+            <div className="space-y-5 pb-4">
+              <NestedStagedDropdown
+                variant="modal"
+                label="Reward event"
+                placeholder="Select an event"
+                required
+                options={rewardEvents}
+                selectedOption={confirmedEvent}
+                confirmedFieldValues={form.eventFieldValues}
+                stagedOption={eventSelection.staged}
+                stagedFieldValues={stagedEventFields}
+                getLiveLabel={formatEventLiveLabel}
+                validateSave={canSaveEventSelection}
+                onSelectOption={handleEventSelect}
+                onFieldChange={handleEventFieldChange}
+                isOpen={eventSelection.isOpen}
+                onOpen={handleEventOpen}
+                onCancel={eventSelection.cancel}
+                onSave={handleEventSave}
+              />
+
+              <NestedStagedDropdown
+                variant="modal"
+                label="Reward with"
+                placeholder="Select a reward"
+                required
+                disabled={!form.eventId}
+                options={typeOptions}
+                selectedOption={confirmedType}
+                confirmedFieldValues={form.typeFieldValues}
+                stagedOption={typeSelection.staged}
+                stagedFieldValues={stagedTypeFields}
+                getLiveLabel={formatTypeLiveLabel}
+                validateSave={canSaveTypeSelection}
+                onSelectOption={handleTypeSelect}
+                onFieldChange={handleTypeFieldChange}
+                isOpen={typeSelection.isOpen}
+                onOpen={handleTypeOpen}
+                onCancel={typeSelection.cancel}
+                onSave={handleTypeSave}
+              />
+
+              <div className="pt-1">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium text-saral-heading">Make the reward time bound</p>
+                    <p className="mt-1 text-sm leading-relaxed text-[#8a8490]">
+                      Choose an end date to stop this reward automatically.
+                    </p>
+                  </div>
+                  <ToggleSwitch
+                    checked={form.timeBound.enabled}
+                    onChange={(enabled) =>
+                      setForm({ ...form, timeBound: { ...form.timeBound, enabled } })
+                    }
+                  />
+                </div>
+
+                {form.timeBound.enabled && (
+                  <div className="mt-4">
+                    <label className="mb-2 block text-sm text-saral-nav">End date</label>
+                    <input
+                      type="date"
+                      value={form.timeBound.endDate}
+                      min={minEndDate}
+                      onChange={(e) => {
+                        const value = e.target.value
+                        if (value && value < minEndDate) return
+                        setForm({
+                          ...form,
+                          timeBound: { ...form.timeBound, endDate: value },
+                        })
+                      }}
+                      className="w-full rounded-lg border border-[#e8e4ea] px-4 py-3 text-sm text-saral-heading outline-none focus:border-saral-purple focus:ring-2 focus:ring-saral-icon-bg"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {submitStatus === 'success' && (
+            <div className="self-start mb-4 inline-flex items-center gap-3 rounded-full bg-slate-950 py-2 px-[10px] shadow-[0_10px_30px_rgba(0,0,0,0.16)]">
+              <div className="flex  items-center justify-center">
+                <img
+                  src="/images/successIcon.svg"
+                  alt="Success"
+                  className="h-6 w-6"
+                />
+              </div>
+              <span className="text-sm font-medium text-white">Reward Created!</span>
+            </div>
+          )}
+
+          <div className="relative z-10 shrink-0 rounded-b-2xl border-t border-[#f3eef2] bg-white py-5">
+            <div className="flex gap-3">
+              {submitStatus === 'success' ? (
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  className="flex-1 rounded-lg bg-saral-purple py-3 text-sm font-semibold text-white transition hover:bg-saral-purple-hover"
+                >
+                  Done
+                </button>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={handleClose}
+                    className="flex-1 rounded-lg border border-[#e8e4ea] bg-white py-3 text-sm font-medium text-saral-heading hover:bg-[#faf8fa]"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCreate}
+                    disabled={!canCreate}
+                    className="flex-1 rounded-lg bg-saral-purple py-3 text-sm font-semibold text-white transition hover:bg-saral-purple-hover disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Create Reward
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

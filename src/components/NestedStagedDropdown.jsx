@@ -10,6 +10,9 @@ function CheckIcon() {
   )
 }
 
+// Renders a dropdown component that supports nested selection with its own open/close state and click outside handling, 
+// allowing for complex option configurations with inline fields and validation before saving
+
 function renderInlineField(field, values, onFieldChange) {
   if (field.type === 'currency') {
     return (

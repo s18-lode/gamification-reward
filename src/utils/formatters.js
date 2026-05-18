@@ -7,6 +7,9 @@ export const formatDate = (isoString) => {
   })
 }
 
+// Helper function to format a reward summary string based on 
+// its type and field values, used for displaying  information about rewards in the UI
+
 export const formatRewardSummary = (reward) => {
   const parts = [reward.typeLabel]
   if (reward.fieldValues) {

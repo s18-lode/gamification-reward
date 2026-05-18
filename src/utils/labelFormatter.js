@@ -20,6 +20,9 @@ export const formatEventLiveLabel = (event, fieldValues = {}) => {
   return event.label
 }
 
+
+// Helper function to format a reward type's live label based on its type and field values, used for 
+// displaying information about rewards in the UI
 export const formatTypeLiveLabel = (type, fieldValues = {}) => {
   if (!type) return null
 
