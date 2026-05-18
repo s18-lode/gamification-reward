@@ -61,7 +61,6 @@ export default function InlineNestedSelect({
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
-// Dropdown panel that appears when the select is open, allowing the user to choose from the provided options, with click handling to select an option and close the dropdown
       {open && (
         <div className="absolute left-0 right-0 z-20 mt-1 overflow-hidden rounded-xl border border-[#ebe6ec] bg-white shadow-[0_10px_30px_rgba(45,10,49,0.12)]">
           <div className="max-h-44 overflow-y-auto">
