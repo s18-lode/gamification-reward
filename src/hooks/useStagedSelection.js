@@ -4,7 +4,9 @@ export const useStagedSelection = (initialValue = null) => {
   const [confirmed, setConfirmed] = useState(initialValue)
   const [staged, setStaged] = useState(initialValue)
   const [isOpen, setIsOpen] = useState(false)
-
+// Custom hook to manage a staged selection process, allowing '
+// for opening a selection interface, staging changes, 
+// and confirming or canceling those changes with proper state management
   const open = useCallback(() => {
     setStaged(confirmed)
     setIsOpen(true)

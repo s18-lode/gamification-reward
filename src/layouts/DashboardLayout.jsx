@@ -4,7 +4,7 @@ import Sidebar from '../components/Sidebar'
 
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-
+// Main layout component for the dashboard, rendering a sidebar and an outlet for nested routes, with state management for sidebar visibility on smaller screens
   return (
     <div className="flex min-h-screen bg-white">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />

@@ -3,7 +3,7 @@ import { createSlice, nanoid } from '@reduxjs/toolkit'
 const initialState = {
   campaigns: [],
 }
-
+// Redux slice for managing campaigns in the gamification system, allowing for adding and removing campaigns with unique IDs and timestamps
 const campaignSlice = createSlice({
   name: 'campaigns',
   initialState,

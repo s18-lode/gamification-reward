@@ -1,3 +1,7 @@
+// Configuration for different reward types that can be assigned to events in the gamification system,
+// including their fields and a helper function to get allowed reward types based on the selected event
+
+
 import { rewardEvents } from './rewardEvents'
 
 export const rewardTypes = [
@@ -25,9 +29,10 @@ export const rewardTypes = [
         inline: true,
         placeholder: 'Select tier',
         options: [
-          { value: 'silver', label: 'Silver' },
-          { value: 'gold', label: 'Gold' },
-          { value: 'platinum', label: 'Platinum' },
+          { value: 'Tier Name Here1', label: 'Tier Name Here1' },
+          { value: 'Tier Name Here2', label: 'Tier Name Here2' },
+          { value: 'Tier Name Here3', label: 'Tier Name Here3' },
+          { value: 'Tier Name Here4', label: 'Tier Name Here4' },
         ],
       },
     ],

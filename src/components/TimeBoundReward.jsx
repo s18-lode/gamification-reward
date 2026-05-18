@@ -6,6 +6,7 @@ export default function TimeBoundReward({
   onStartChange,
   onEndChange,
 }) {
+  // Component for configuring time-bound rewards, allowing users to enable/disable the feature and set start/end dates with proper validation and styling
   return (
     <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4">
       <label className="flex cursor-pointer items-center gap-3">

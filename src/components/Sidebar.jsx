@@ -1,5 +1,6 @@
 import { Home, BarChart3, Sparkles, Layers, CreditCard, Settings2 } from 'lucide-react'
 import { SaralLogo } from './icons/NavIcons'
+import Button from './ui/Button'
 
 const menuItems = [
   { label: 'Home', icon: Home },
@@ -8,16 +9,17 @@ const menuItems = [
   { label: 'Applications', icon: Layers },
   { label: 'Payments', icon: CreditCard },
 ]
-
+// Sidebar component that renders the navigation menu with active state, responsive behavior for mobile, and a settings button at the bottom
 export default function Sidebar({ isOpen, onClose }) {
   return (
     <>
       {/* background on phone/tablet when drawer is open */}
       {isOpen && (
-        <button
+        <Button
           type="button"
+          variant="ghost"
           aria-label="Close menu"
-          className="fixed inset-0 z-40 bg-slate-900/30 lg:hidden"
+          className="fixed inset-0 z-40 bg-slate-900/30 lg:hidden p-0 hover:bg-slate-900/30"
           onClick={onClose}
         />
       )}
@@ -36,9 +38,10 @@ export default function Sidebar({ isOpen, onClose }) {
 
         <nav className="flex flex-col gap-2" aria-label="Primary navigation">
           {menuItems.map(({ label, icon: Icon, active }) => (
-            <button
+            <Button
               key={label}
               type="button"
+              variant="ghost"
               className={`flex w-full items-center gap-3 rounded-[10px] px-3 py-3 text-[15px] font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-saral-purple focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                 active
                   ? 'bg-saral-pink text-saral-purple shadow-[0_2px_10px_rgba(166,53,176,0.12)]'
@@ -47,18 +50,19 @@ export default function Sidebar({ isOpen, onClose }) {
             >
               <Icon className={`h-5 w-5 ${active ? 'text-saral-purple' : 'text-saral-nav'}`} />
               <span>{label}</span>
-            </button>
+            </Button>
           ))}
         </nav>
 
         <div className="mt-auto rounded-[10px] bg-saral-pink/70 px-3 py-3 shadow-sm">
-          <button
+          <Button
             type="button"
+            variant="ghost"
             className="flex w-full items-center gap-3 rounded-[10px] text-sm font-medium text-saral-nav transition hover:bg-saral-pink hover:text-saral-purple"
           >
             <Settings2 className="h-5 w-5" />
             Settings
-          </button>
+          </Button>
         </div>
       </aside>
     </>

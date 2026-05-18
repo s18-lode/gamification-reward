@@ -18,6 +18,9 @@ export const canSaveEventSelection = (option, fieldValues = {}) => {
   return true
 }
 
+// checks whether the user filled in everything needed before hitting save in
+// a dropdown for reward types, which have different required fields based on the type of reward being configured
+
 export const canSaveTypeSelection = (option, fieldValues = {}) => {
   if (!option) return false
 

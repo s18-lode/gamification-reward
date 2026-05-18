@@ -1,0 +1,72 @@
+Project Overview: Gamification Reward App
+
+This repository is a small React-based gamification dashboard built with Vite and Redux Toolkit.
+It supports creating reward campaigns using event and reward type selection, including optional time-bound rewards.
+
+Root files and folders:
+- `package.json`: project dependencies and scripts.
+- `package-lock.json`: exact installed package versions.
+- `vite.config.js`: Vite build/dev server configuration.
+- `index.html`: main HTML entry point.
+- `README.md`: project description and setup info.
+- `src/`: main application source code.
+- `public/`: static assets served by Vite.
+
+Public assets:
+- `public/images/`: image and icon assets used by the UI.
+
+Source folder structure:
+- `src/main.jsx`: app entry point that renders the React app.
+- `src/App.jsx`: top-level app component, loads routes.
+- `src/index.css`: global styles.
+
+Application structure:
+- `src/routes/AppRoutes.jsx`: configures React Router routes and layout.
+- `src/layouts/DashboardLayout.jsx`: app shell that shows the sidebar and page outlet.
+- `src/pages/GamificationLandingPage.jsx`: main page users see, including the hero section, feature cards, and button to open the create campaign modal.
+
+Redux and state:
+- `src/app/store.js`: Redux Toolkit store configuration.
+- `src/features/campaigns/campaignSlice.js`: campaign state slice.
+  - `addCampaign`: creates a campaign with a unique id and timestamp.
+  - `removeCampaign`: removes a campaign by id.
+
+Configuration data:
+- `src/configs/rewardEvents.js`: available reward-trigger events.
+- `src/configs/rewardTypes.js`: available reward types and rules.
+
+Reusable hooks:
+- `src/hooks/useStagedSelection.js`: manages staged dropdown selections versus confirmed selections. Used by the modal dropdowns to allow "save/cancel" behavior.
+
+UI components:
+- `src/components/CreateCampaignModal.jsx`: modal for building a new reward campaign.
+  - Handles event and reward type selection.
+  - Supports time-bound reward end date.
+  - Dispatches `addCampaign` when creating a new campaign.
+- `src/components/NestedStagedDropdown.jsx`: dropdown component used inside the modal.
+  - Supports staged selection, inline fields, and save/cancel controls.
+- `src/components/InlineNestedSelect.jsx`: small nested select used for inline field selection inside the modal.
+- `src/components/InlineNestedInput.jsx`: nested inline input components for number or currency fields.
+- `src/components/DynamicFieldRenderer.jsx`: renders the appropriate nested form field type inside dropdowns.
+- `src/components/TimeBoundReward.jsx`: renders time-bound reward UI elements.
+- `src/components/Sidebar.jsx`: application sidebar/navigation drawer.
+- `src/components/icons/NavIcons.jsx`: icon components used in the navigation and feature cards.
+- `src/components/ui/Button.jsx`: centralized button component with variants and sizes for consistent button styling.
+
+Utility helpers:
+- `src/utils/dateHelpers.js`: date formatting and minimum date helpers.
+- `src/utils/formatters.js`: formatting data for display.
+- `src/utils/labelFormatter.js`: builds live labels for selected events and reward types.
+- `src/utils/selectionValidation.js`: validation rules for saving staged dropdown selections.
+- `src/utils/validation.js`: shared validation helpers.
+
+How it works:
+- The landing page renders the main UI and opens the create campaign modal.
+- The modal uses data from `src/configs` and `useStagedSelection` to let users choose an event and reward type.
+- When the user creates a campaign, the modal dispatches `addCampaign` into the Redux store.
+- The app is built with reusable UI components and centralized styling through `Button.jsx`.
+
+Overall purpose:
+- Provide a UI for building and managing gamification reward campaigns.
+- Demonstrate staged selection UX for nested form inputs.
+- Store campaign data in Redux and render it through the app.
